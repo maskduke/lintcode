@@ -1,0 +1,46 @@
+/*
+Write a method anagram(s,t) to decide if two strings are anagrams or not.
+
+Have you met this question in a real interview? Yes
+Example
+Given s="abcd", t="dcab", return true.
+
+Challenge
+O(n) time, O(1) extra space
+
+Tags Expand 
+String Cracking The Coding Interview
+
+
+Related Problems Expand 
+Medium Anagrams 22 %
+Easy Compare Strings 26 %
+*/
+
+//Codes start from here
+public class Solution {
+    /**
+     * @param s: The first string
+     * @param b: The second string
+     * @return true or false
+     */
+    public boolean anagram(String s, String t) {
+        // write your code here
+        
+        //use int array to count unique characters
+        if (s == null || t == null || s.length() != t.length()) {
+            return false;
+        }
+        int[] checker = new int[256];
+        int n = s.length();
+        for (int i = 0; i < n; ++i) {
+            checker[s.charAt(i)]++;
+        }
+        for (int i = 0; i < n; ++i) {
+            if (--checker[t.charAt(i)] < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
