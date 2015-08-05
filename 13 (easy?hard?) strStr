@@ -1,0 +1,79 @@
+/*
+strstr (a.k.a find sub string), is a useful function in string operation. Your task is to implement this function.
+
+For a given source string and a target string, you should output the first index(from 0) of target string in source string.
+
+If target does not exist in source, just return -1.
+
+Have you met this question in a real interview? Yes
+Example
+If source = "source" and target = "target", return -1.
+
+If source = "abcdabcdefg" and target = "bcd", return 1.
+
+Challenge
+O(n2) is acceptable. Can you implement an O(n) algorithm? (hint: KMP)
+
+Clarification
+Do I need to implement KMP Algorithm in a real interview?
+
+Not necessary. When you meet this problem in a real interview, the interviewer may just want to test your basic implementation ability. But make sure your confirm with the interviewer first.
+Tags Expand 
+Basic Implementation String
+*/
+
+//codes start from here
+class Solution {
+    /**
+     * Returns a index to the first occurrence of target in source,
+     * or -1  if target is not part of source.
+     * @param source string to be scanned.
+     * @param target string containing the sequence of characters to match.
+     */
+    public int strStr(String source, String target) {
+        //write your code here
+        //O(n^2) solution: brute force, This is O(n) solution with KMP algorithm
+        if (source == null || target == null || source.length() < target.length()) {
+            return -1;
+        }
+        if (target.length() == 0) {
+            return 0;
+        }
+        //build failure function
+        int[] t = new int[(target.length() > 2)?target.length():2];
+        t[0] = -1; t[1] = 0;
+        int pos = 2, cnd = 0, n = target.length(), m = source.length();
+        while (pos < n) {
+            if (target.charAt(pos-1) == target.charAt(cnd)) {
+                t[pos++] = ++cnd;
+            }
+            else if (cnd > 0) {
+                cnd = t[cnd];
+            }
+            else {
+                t[pos++] = 0;
+            }
+        }
+        //now search the str with kmp algorithm
+        pos = 0; cnd = 0;
+        while (pos+cnd < m) {
+            if (target.charAt(cnd) == source.charAt(pos+cnd)) {
+                if (cnd == n-1) {
+                    return pos;
+                }
+                ++cnd;
+            }
+            else {
+                if (t[cnd] > -1) {
+                    pos = pos+cnd+t[cnd];
+                    cnd = t[cnd];
+                }
+                else {
+                    cnd = 0;
+                    ++pos;
+                }
+            }
+        }
+        return -1;
+    }
+}
